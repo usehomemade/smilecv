@@ -34,7 +34,7 @@
 | Files | Cloudflare R2 (S3 API) for chat attachments, profile pictures and CV photos, served through the app's own routes |
 | AI | Vercel AI SDK with OpenAI; the model edits the CV through typed tools |
 | i18n | [Paraglide JS 2](https://inlang.com/m/gerre34r/library-inlang-paraglideJs), 20 locales, translated with a script |
-| Email | Resend with react-email templates |
+| Email | [useSend](https://usesend.com) (self-hosted at usesend.wust.co) with react-email templates |
 | Export | Playwright (headless Chromium) prints the editor's pages to PDF and PNG |
 | Analytics | Umami, off unless configured |
 | Quality | Biome via Ultracite, TypeScript strict |
@@ -88,7 +88,7 @@ pnpm dev                     # http://localhost:3033
 | `OPENAI_MODEL` | no | Defaults to `gpt-5.4-mini` |
 | `R2_ACCOUNT_ID`, `R2_BUCKET`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` | yes | Private R2 bucket for uploads; the key needs object read and write on that bucket |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | no | Google sign-in; the button hides without them |
-| `RESEND_API_KEY`, `EMAIL_FROM` | no | Account emails (password reset, email change) |
+| `USESEND_API_KEY`, `EMAIL_FROM` | no | Account emails (password reset, email change); the key is restricted to `emails.smilecv.com`. `USESEND_URL` defaults to `https://usesend.wust.co` |
 | `ADMIN_EMAILS` | no | Comma-separated emails that may open `/admin` |
 | `UMAMI_WEBSITE_ID`, `UMAMI_SCRIPT_URL` | no | Analytics; off when unset |
 

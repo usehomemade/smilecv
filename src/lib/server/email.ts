@@ -1,5 +1,5 @@
 import { render } from "@react-email/components";
-import { Resend } from "resend";
+import { UseSend } from "usesend-js";
 
 import { ActionEmail } from "#/emails/layout";
 import { m } from "#/paraglide/messages.js";
@@ -8,8 +8,11 @@ import type { Locale } from "#/paraglide/runtime.js";
 
 const TRAILING_SLASH = /\/$/u;
 const FROM = process.env.EMAIL_FROM ?? "SmileCV <noreply@emails.smilecv.com>";
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
+const usesend = process.env.USESEND_API_KEY
+  ? new UseSend(
+      process.env.USESEND_API_KEY,
+      process.env.USESEND_URL ?? "https://usesend.wust.co"
+    )
   : null;
 
 const origin = () =>
@@ -65,11 +68,11 @@ export const sendAccountEmail = async (
     })
   );
   const subject = copy.subject({}, t);
-  if (!resend) {
+  if (!usesend) {
     console.info(`[email] ${kind} → ${opts.to}: ${opts.url}`);
     return;
   }
-  const { error } = await resend.emails.send({
+  const { error } = await usesend.emails.send({
     from: FROM,
     to: opts.to,
     subject,
