@@ -12,6 +12,7 @@ import { cvs } from "#/server/api/routes/cvs";
 import { exportCv } from "#/server/api/routes/export";
 import { faq } from "#/server/api/routes/faq";
 import { files } from "#/server/api/routes/files";
+import { health } from "#/server/api/routes/health";
 import { meta } from "#/server/api/routes/meta";
 // Sets up the logger (and its OpenObserve drain) before any request.
 import "#/server/log";
@@ -19,13 +20,15 @@ import "#/server/log";
 const base = new OpenAPIHono().basePath("/api");
 
 // One wide event per request (method, path, status, duration, errors).
-base.use(evlog());
+// Health probes are not logged.
+base.use(evlog({ exclude: ["/api/health"] }));
 
 // Better Auth owns /api/auth/* (sign-in, OAuth callbacks, sessions).
 base.on(["GET", "POST"], "/auth/*", (c) => auth.handler(c.req.raw));
 
 /** Every server endpoint of the app; Start mounts it at /api/$. */
 export const app = base
+  .route("/", health)
   .route("/", meta)
   .route("/", cvs)
   .route("/", accountRoutes)
