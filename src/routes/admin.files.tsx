@@ -123,6 +123,6 @@ const Files = () => {
 export const Route = createFileRoute("/admin/files")({
   validateSearch: search,
   loaderDeps: ({ search: s }) => s,
-  loader: ({ deps }) => listAdminFiles({ data: deps }),
+  loader: ({ deps }) => listAdminFiles(deps),
   component: Files,
 });

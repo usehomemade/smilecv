@@ -548,7 +548,7 @@ export const ChatPanel = ({
     stop();
     setMessages([]);
     try {
-      await clearChat({ data: { id: cvId } });
+      await clearChat({ id: cvId });
     } catch {
       toast.error(m.chat_clear_failed());
     }

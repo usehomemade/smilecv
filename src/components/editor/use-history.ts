@@ -164,15 +164,13 @@ export const useHistory = (
         // One at a time and in order, so an older version never lands last.
         // oxlint-disable-next-line no-await-in-loop -- sequential on purpose
         await saveVersion({
-          data: {
-            cvId,
-            id: v.id,
-            at: v.at,
-            label: v.label,
-            source: v.source,
-            template: v.doc.template,
-            data: v.doc.cv,
-          },
+          cvId,
+          id: v.id,
+          at: v.at,
+          label: v.label,
+          source: v.source,
+          template: v.doc.template,
+          data: v.doc.cv,
         });
         setSaved((prev) => new Map(prev).set(v.id, docAtSend));
       } catch {
@@ -199,7 +197,7 @@ export const useHistory = (
     if (!hasOlder) {
       return;
     }
-    const page = await listVersions({ data: { cvId, before: first.at } });
+    const page = await listVersions({ cvId, before: first.at });
     setHasOlder(page.more);
     const older = page.versions.map(fromStored);
     setSaved((prev) => {

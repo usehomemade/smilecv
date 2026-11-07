@@ -29,7 +29,7 @@ export const startCv = async ({
     }
   }
   try {
-    const created = await createCv({ data: { ...opts, locale: getLocale() } });
+    const created = await createCv({ ...opts, locale: getLocale() });
     let source: "import" | "sample" | "template" | "blank" = "blank";
     if (from) {
       source = from;

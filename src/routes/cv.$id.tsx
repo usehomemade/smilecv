@@ -352,7 +352,7 @@ const Editor = () => {
       const pages = Math.max(b.main.length, b.side.length) + 1;
       if (pages !== savedPages.current) {
         savedPages.current = pages;
-        updateCv({ data: { id: initial.id, pages } }).catch(() => {
+        updateCv({ id: initial.id, pages }).catch(() => {
           savedPages.current = 0;
         });
       }
@@ -374,18 +374,16 @@ const Editor = () => {
     try {
       const { current } = latest;
       await updateCv({
-        data: {
-          id: initial.id,
-          data: current.doc.cv,
-          template: current.doc.template,
-          pages: breaksRef.current
-            ? Math.max(
-                breaksRef.current.main.length,
-                breaksRef.current.side.length
-              ) + 1
-            : undefined,
-          title: current.title.trim() || m.cv_untitled(),
-        },
+        id: initial.id,
+        data: current.doc.cv,
+        template: current.doc.template,
+        pages: breaksRef.current
+          ? Math.max(
+              breaksRef.current.main.length,
+              breaksRef.current.side.length
+            ) + 1
+          : undefined,
+        title: current.title.trim() || m.cv_untitled(),
       });
       setSave("saved");
       setSavedAt(Date.now());
@@ -835,13 +833,13 @@ export const Route = createFileRoute("/cv/$id")({
       throw redirect({ to: "/" });
     }
     const [cv, dock] = await Promise.all([
-      getCv({ data: { id: params.id } }),
+      getCv({ id: params.id }),
       getDockPrefs(),
     ]);
     if (!cv) {
       throw notFound();
     }
-    const history = await listVersions({ data: { cvId: params.id } });
+    const history = await listVersions({ cvId: params.id });
     return { viewer, cv, dock, history };
   },
   head: ({ loaderData }) => ({

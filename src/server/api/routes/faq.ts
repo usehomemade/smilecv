@@ -1,5 +1,5 @@
 import { createOpenAI } from "@ai-sdk/openai";
-import { createFileRoute } from "@tanstack/react-router";
+import { createRoute, z } from "@hono/zod-openapi";
 import { generateText } from "ai";
 
 import { CONTACT_EMAIL, faqItems } from "#/components/marketing/faq-copy";
@@ -15,6 +15,7 @@ import {
 import { m } from "#/paraglide/messages.js";
 import { getLocale, isLocale } from "#/paraglide/runtime.js";
 import type { Locale } from "#/paraglide/runtime.js";
+import { ErrorSchema, json, router } from "#/server/api/lib";
 
 const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -73,67 +74,91 @@ Rules:
 
 ${HUMAN_WRITING}`;
 
-const json = (body: unknown, status = 200) => Response.json(body, { status });
-
-export const Route = createFileRoute("/api/faq")({
-  server: {
-    handlers: {
-      POST: async ({ request }) => {
-        const body = (await request.json().catch(() => null)) as {
-          question?: unknown;
-          locale?: unknown;
-        } | null;
-        const locale: Locale =
-          typeof body?.locale === "string" && isLocale(body.locale)
-            ? body.locale
-            : getLocale();
-        const t = { locale };
-        const question =
-          typeof body?.question === "string" ? body.question.trim() : "";
-        if (!question) {
-          return json({ error: m.faq_ask_empty({}, t) }, 400);
-        }
-        if (question.length > MAX_QUESTION) {
-          return json({ error: m.faq_ask_too_long({}, t) }, 400);
-        }
-        if (!allowed(clientIp(request))) {
-          return json({ error: m.faq_ask_rate_limited({}, t) }, 429);
-        }
-        const modelId = process.env.OPENAI_MODEL || "gpt-5.4-mini";
-        const started = Date.now();
-        try {
-          const { text, usage } = await generateText({
-            model: openai(modelId),
-            instructions: `${instructions}\n\nThe reader's interface language is ${LANGUAGE_NAMES[locale]} (${locale}). Reply in the language of the question; if it is unclear, reply in ${LANGUAGE_NAMES[locale]}.`,
-            prompt: question,
-            maxOutputTokens: 1500,
-            providerOptions: { openai: { reasoningEffort: "low" } },
-          });
-          recordAiUsage({
-            kind: "faq",
-            model: modelId,
-            ...usageNumbers(usage),
-            durationMs: Date.now() - started,
-            detail: {
-              prompt: question,
-              reply: text.trim(),
-              replyLength: text.trim().length,
-              locale,
-            },
-          });
-          return json({ answer: text.trim() });
-        } catch (error) {
-          console.error("[faq]", error);
-          recordAiUsage({
-            kind: "faq",
-            model: modelId,
-            durationMs: Date.now() - started,
-            error: errorText(error),
-            detail: { prompt: question, locale, errorStack: errorStack(error) },
-          });
-          return json({ error: m.faq_ask_error({}, t) }, 502);
-        }
+export const faq = router().openapi(
+  createRoute({
+    method: "post",
+    path: "/faq",
+    tags: ["Site"],
+    summary: "Ask a question about SmileCV; answered by the AI from the FAQ",
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: z.object({
+              question: z.string().optional(),
+              locale: z.string().optional(),
+            }),
+          },
+        },
       },
     },
+    responses: {
+      200: json(
+        z.object({ answer: z.string() }).openapi("FaqAnswer"),
+        "The answer"
+      ),
+      400: json(ErrorSchema, "Empty or too long question"),
+      429: json(ErrorSchema, "Too many questions"),
+      502: json(ErrorSchema, "The model failed"),
+    },
+  }),
+  async (c) => {
+    const body = c.req.valid("json");
+    const request = c.req.raw;
+    const locale: Locale =
+      typeof body.locale === "string" && isLocale(body.locale)
+        ? body.locale
+        : getLocale();
+    const t = { locale };
+    const question =
+      typeof body.question === "string" ? body.question.trim() : "";
+    if (!question) {
+      return c.json({ error: m.faq_ask_empty({}, t) }, 400);
+    }
+    if (question.length > MAX_QUESTION) {
+      return c.json({ error: m.faq_ask_too_long({}, t) }, 400);
+    }
+    if (!allowed(clientIp(request))) {
+      return c.json({ error: m.faq_ask_rate_limited({}, t) }, 429);
+    }
+    const modelId = process.env.OPENAI_MODEL || "gpt-5.4-mini";
+    const started = Date.now();
+    try {
+      const { text, usage } = await generateText({
+        model: openai(modelId),
+        instructions: `${instructions}\n\nThe reader's interface language is ${LANGUAGE_NAMES[locale]} (${locale}). Reply in the language of the question; if it is unclear, reply in ${LANGUAGE_NAMES[locale]}.`,
+        prompt: question,
+        maxOutputTokens: 1500,
+        providerOptions: { openai: { reasoningEffort: "low" } },
+      });
+      recordAiUsage({
+        kind: "faq",
+        model: modelId,
+        ...usageNumbers(usage),
+        durationMs: Date.now() - started,
+        detail: {
+          prompt: question,
+          reply: text.trim(),
+          replyLength: text.trim().length,
+          locale,
+        },
+      });
+      return c.json({ answer: text.trim() }, 200);
+    } catch (error) {
+      console.error("[faq]", error);
+      recordAiUsage({
+        kind: "faq",
+        model: modelId,
+        durationMs: Date.now() - started,
+        error: errorText(error),
+        detail: { prompt: question, locale, errorStack: errorStack(error) },
+      });
+      return c.json({ error: m.faq_ask_error({}, t) }, 502);
+    }
   },
-});
+  (result, c) => {
+    if (!result.success) {
+      return c.json({ error: m.faq_ask_empty() }, 400);
+    }
+  }
+);

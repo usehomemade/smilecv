@@ -205,7 +205,7 @@ const uploadAvatarFile = async (file: File, router: AppRouter) => {
     } catch (error) {
       throw new Error(m.settings_photo_unsupported(), { cause: error });
     }
-    await uploadAvatar({ data: { dataUrl } });
+    await uploadAvatar({ dataUrl });
     await router.invalidate();
     toast.success(m.settings_photo_saved());
   } catch (error) {
@@ -415,7 +415,7 @@ const savePassword = async (
         throw new Error(m.settings_password_wrong());
       }
     } else {
-      await setAccountPassword({ data: { newPassword: next } });
+      await setAccountPassword({ newPassword: next });
     }
     toast.success(m.settings_password_saved());
     return true;
@@ -520,7 +520,7 @@ const DangerGroup = ({ email }: { email: string }) => {
       }
       setDeleting(true);
       try {
-        await deleteAccount({ data: { confirm: typed } });
+        await deleteAccount({ confirm: typed });
         track("account_deleted");
         await authClient.signOut().catch(() => null);
         toast.success(m.settings_deleted());

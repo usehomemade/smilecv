@@ -1,19 +1,18 @@
-import { getRequestHeaders } from "@tanstack/react-start/server";
-
 import { auth } from "#/lib/auth";
 import { m } from "#/paraglide/messages.js";
+import { fail } from "#/server/api/lib";
 
-export const getSession = async () =>
-  await auth.api.getSession({ headers: getRequestHeaders() });
+export const getSession = async (headers: Headers) =>
+  await auth.api.getSession({ headers });
 
-export const requireUser = async () => {
-  const session = await getSession();
+export const requireUser = async (headers: Headers) => {
+  const session = await getSession(headers);
   if (!session) {
-    throw new Error(m.err_not_signed_in());
+    return fail(401, m.err_not_signed_in());
   }
   // Banned users keep no sessions, but a ban can land mid-session.
   if ((session.user as { banned?: boolean | null }).banned) {
-    throw new Error(m.err_banned());
+    return fail(403, m.err_banned());
   }
   return session.user;
 };

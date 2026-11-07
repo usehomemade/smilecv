@@ -412,7 +412,7 @@ export const UsageSheet = ({
   const usage = loaded?.id === id ? loaded.usage : undefined;
   useEffect(() => {
     let live = true;
-    getAdminUsage({ data: { id } })
+    getAdminUsage({ id })
       .then((u) => live && setLoaded({ id, usage: u }))
       .catch(() => live && setLoaded({ id, usage: null }));
     return () => {

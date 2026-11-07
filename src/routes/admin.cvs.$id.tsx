@@ -181,7 +181,7 @@ const AdminCv = () => {
 
 export const Route = createFileRoute("/admin/cvs/$id")({
   loader: async ({ params }) => {
-    const cv = await getAdminCv({ data: { id: params.id } });
+    const cv = await getAdminCv({ id: params.id });
     if (!cv) {
       throw notFound();
     }

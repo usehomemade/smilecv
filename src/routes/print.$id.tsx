@@ -41,7 +41,7 @@ export const Route = createFileRoute("/print/$id")({
   }),
   loaderDeps: ({ search }) => ({ token: search.token }),
   loader: async ({ params, deps }) => {
-    const cv = await getPrintCv({ data: { id: params.id, token: deps.token } });
+    const cv = await getPrintCv({ id: params.id, token: deps.token });
     if (!cv) {
       throw notFound();
     }

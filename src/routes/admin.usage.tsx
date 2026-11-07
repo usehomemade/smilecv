@@ -258,6 +258,6 @@ export const Route = createFileRoute("/admin/usage")({
   validateSearch: search,
   // Opening a request's detail doesn't reload the table.
   loaderDeps: ({ search: { id: _open, ...s } }) => s,
-  loader: ({ deps }) => listAdminUsage({ data: deps }),
+  loader: ({ deps }) => listAdminUsage(deps),
   component: Usage,
 });

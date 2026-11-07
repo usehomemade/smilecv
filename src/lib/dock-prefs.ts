@@ -1,5 +1,4 @@
-import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeader } from "@tanstack/react-start/server";
+import { call } from "#/lib/api";
 
 export type DockSide = "left" | "right";
 export interface DockPrefs {
@@ -35,10 +34,5 @@ export const parseDock = (raw: string | undefined | null): DockPrefs => {
  * Read on the server so the editor renders the chat card at its saved side
  * and width from the first paint (no layout shift on reload).
  */
-export const getDockPrefs = createServerFn({ method: "GET" }).handler(() => {
-  const cookie = getRequestHeader("cookie") ?? "";
-  const match = cookie.match(
-    new RegExp(`(?:^|; )${DOCK_COOKIE}=(?<value>[^;]*)`, "u")
-  );
-  return parseDock(match?.groups?.value);
-});
+export const getDockPrefs = async (): Promise<DockPrefs> =>
+  await call((client) => client.api["dock-prefs"].$get());

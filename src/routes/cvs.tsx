@@ -89,7 +89,7 @@ const CvCard = ({
   const router = useRouter();
   const duplicate = useCallback(async () => {
     try {
-      await duplicateCv({ data: { id: c.id } });
+      await duplicateCv({ id: c.id });
       router.invalidate();
     } catch (error) {
       const limit = limitOf(error);
@@ -181,7 +181,7 @@ const Dashboard = () => {
     if (!toDelete) {
       return;
     }
-    await deleteCv({ data: { id: toDelete.id } });
+    await deleteCv({ id: toDelete.id });
     setToDelete(null);
     router.invalidate();
   }, [router, toDelete]);

@@ -392,7 +392,7 @@ const SharedPage = () => {
 
 export const Route = createFileRoute("/s/$shareId")({
   loader: async ({ params }) => {
-    const cv = await getSharedCv({ data: { shareId: params.shareId } });
+    const cv = await getSharedCv({ shareId: params.shareId });
     if (!cv) {
       throw notFound();
     }

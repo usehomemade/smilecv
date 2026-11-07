@@ -22,23 +22,13 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminFilesRouteImport } from './routes/admin.files'
 import { Route as AdminUsageRouteImport } from './routes/admin.usage'
-import { Route as ApiChatRouteImport } from './routes/api/chat'
-import { Route as ApiFaqRouteImport } from './routes/api/faq'
-import { Route as ApiPhotoRouteImport } from './routes/api/photo'
-import { Route as ApiUploadRouteImport } from './routes/api/upload'
+import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as CvIdRouteImport } from './routes/cv.$id'
 import { Route as PrintIdRouteImport } from './routes/print.$id'
 import { Route as SShareIdRouteImport } from './routes/s.$shareId'
 import { Route as AdminCvsIdRouteImport } from './routes/admin.cvs.$id'
 import { Route as AdminUsersIndexRouteImport } from './routes/admin.users.index'
 import { Route as AdminUsersIdRouteImport } from './routes/admin.users.$id'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as ApiAvatarUserIdRouteImport } from './routes/api/avatar.$userId'
-import { Route as ApiChatStreamIdRouteImport } from './routes/api/chat-stream.$id'
-import { Route as ApiExportIdRouteImport } from './routes/api/export.$id'
-import { Route as ApiFilesIdRouteImport } from './routes/api/files.$id'
-import { Route as ApiPhotosHashRouteImport } from './routes/api/photos.$hash'
-import { Route as ApiAdminFilesIdRouteImport } from './routes/api/admin.files.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -105,24 +95,9 @@ const AdminUsageRoute = AdminUsageRouteImport.update({
   path: '/usage',
   getParentRoute: () => AdminRoute,
 } as any)
-const ApiChatRoute = ApiChatRouteImport.update({
-  id: '/api/chat',
-  path: '/api/chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiFaqRoute = ApiFaqRouteImport.update({
-  id: '/api/faq',
-  path: '/api/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPhotoRoute = ApiPhotoRouteImport.update({
-  id: '/api/photo',
-  path: '/api/photo',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiUploadRoute = ApiUploadRouteImport.update({
-  id: '/api/upload',
-  path: '/api/upload',
+const ApiSplatRoute = ApiSplatRouteImport.update({
+  id: '/api/$',
+  path: '/api/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CvIdRoute = CvIdRouteImport.update({
@@ -155,41 +130,6 @@ const AdminUsersIdRoute = AdminUsersIdRouteImport.update({
   path: '/users/$id',
   getParentRoute: () => AdminRoute,
 } as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAvatarUserIdRoute = ApiAvatarUserIdRouteImport.update({
-  id: '/api/avatar/$userId',
-  path: '/api/avatar/$userId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatStreamIdRoute = ApiChatStreamIdRouteImport.update({
-  id: '/api/chat-stream/$id',
-  path: '/api/chat-stream/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiExportIdRoute = ApiExportIdRouteImport.update({
-  id: '/api/export/$id',
-  path: '/api/export/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiFilesIdRoute = ApiFilesIdRouteImport.update({
-  id: '/api/files/$id',
-  path: '/api/files/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPhotosHashRoute = ApiPhotosHashRouteImport.update({
-  id: '/api/photos/$hash',
-  path: '/api/photos/$hash',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAdminFilesIdRoute = ApiAdminFilesIdRouteImport.update({
-  id: '/api/admin/files/$id',
-  path: '/api/admin/files/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -204,24 +144,14 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin/files': typeof AdminFilesRoute
   '/admin/usage': typeof AdminUsageRoute
-  '/api/chat': typeof ApiChatRoute
-  '/api/faq': typeof ApiFaqRoute
-  '/api/photo': typeof ApiPhotoRoute
-  '/api/upload': typeof ApiUploadRoute
+  '/api/$': typeof ApiSplatRoute
   '/cv/$id': typeof CvIdRoute
   '/print/$id': typeof PrintIdRoute
   '/s/$shareId': typeof SShareIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/cvs/$id': typeof AdminCvsIdRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/avatar/$userId': typeof ApiAvatarUserIdRoute
-  '/api/chat-stream/$id': typeof ApiChatStreamIdRoute
-  '/api/export/$id': typeof ApiExportIdRoute
-  '/api/files/$id': typeof ApiFilesIdRoute
-  '/api/photos/$hash': typeof ApiPhotosHashRoute
   '/admin/users/': typeof AdminUsersIndexRoute
-  '/api/admin/files/$id': typeof ApiAdminFilesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -235,24 +165,14 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/admin/files': typeof AdminFilesRoute
   '/admin/usage': typeof AdminUsageRoute
-  '/api/chat': typeof ApiChatRoute
-  '/api/faq': typeof ApiFaqRoute
-  '/api/photo': typeof ApiPhotoRoute
-  '/api/upload': typeof ApiUploadRoute
+  '/api/$': typeof ApiSplatRoute
   '/cv/$id': typeof CvIdRoute
   '/print/$id': typeof PrintIdRoute
   '/s/$shareId': typeof SShareIdRoute
   '/admin': typeof AdminIndexRoute
   '/admin/cvs/$id': typeof AdminCvsIdRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/avatar/$userId': typeof ApiAvatarUserIdRoute
-  '/api/chat-stream/$id': typeof ApiChatStreamIdRoute
-  '/api/export/$id': typeof ApiExportIdRoute
-  '/api/files/$id': typeof ApiFilesIdRoute
-  '/api/photos/$hash': typeof ApiPhotosHashRoute
   '/admin/users': typeof AdminUsersIndexRoute
-  '/api/admin/files/$id': typeof ApiAdminFilesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -268,24 +188,14 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/admin/files': typeof AdminFilesRoute
   '/admin/usage': typeof AdminUsageRoute
-  '/api/chat': typeof ApiChatRoute
-  '/api/faq': typeof ApiFaqRoute
-  '/api/photo': typeof ApiPhotoRoute
-  '/api/upload': typeof ApiUploadRoute
+  '/api/$': typeof ApiSplatRoute
   '/cv/$id': typeof CvIdRoute
   '/print/$id': typeof PrintIdRoute
   '/s/$shareId': typeof SShareIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/cvs/$id': typeof AdminCvsIdRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/avatar/$userId': typeof ApiAvatarUserIdRoute
-  '/api/chat-stream/$id': typeof ApiChatStreamIdRoute
-  '/api/export/$id': typeof ApiExportIdRoute
-  '/api/files/$id': typeof ApiFilesIdRoute
-  '/api/photos/$hash': typeof ApiPhotosHashRoute
   '/admin/users/': typeof AdminUsersIndexRoute
-  '/api/admin/files/$id': typeof ApiAdminFilesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -302,24 +212,14 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/files'
     | '/admin/usage'
-    | '/api/chat'
-    | '/api/faq'
-    | '/api/photo'
-    | '/api/upload'
+    | '/api/$'
     | '/cv/$id'
     | '/print/$id'
     | '/s/$shareId'
     | '/admin/'
     | '/admin/cvs/$id'
     | '/admin/users/$id'
-    | '/api/auth/$'
-    | '/api/avatar/$userId'
-    | '/api/chat-stream/$id'
-    | '/api/export/$id'
-    | '/api/files/$id'
-    | '/api/photos/$hash'
     | '/admin/users/'
-    | '/api/admin/files/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -333,24 +233,14 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/files'
     | '/admin/usage'
-    | '/api/chat'
-    | '/api/faq'
-    | '/api/photo'
-    | '/api/upload'
+    | '/api/$'
     | '/cv/$id'
     | '/print/$id'
     | '/s/$shareId'
     | '/admin'
     | '/admin/cvs/$id'
     | '/admin/users/$id'
-    | '/api/auth/$'
-    | '/api/avatar/$userId'
-    | '/api/chat-stream/$id'
-    | '/api/export/$id'
-    | '/api/files/$id'
-    | '/api/photos/$hash'
     | '/admin/users'
-    | '/api/admin/files/$id'
   id:
     | '__root__'
     | '/'
@@ -365,24 +255,14 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/files'
     | '/admin/usage'
-    | '/api/chat'
-    | '/api/faq'
-    | '/api/photo'
-    | '/api/upload'
+    | '/api/$'
     | '/cv/$id'
     | '/print/$id'
     | '/s/$shareId'
     | '/admin/'
     | '/admin/cvs/$id'
     | '/admin/users/$id'
-    | '/api/auth/$'
-    | '/api/avatar/$userId'
-    | '/api/chat-stream/$id'
-    | '/api/export/$id'
-    | '/api/files/$id'
-    | '/api/photos/$hash'
     | '/admin/users/'
-    | '/api/admin/files/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -396,20 +276,10 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SignupRoute: typeof SignupRoute
   TermsRoute: typeof TermsRoute
-  ApiChatRoute: typeof ApiChatRoute
-  ApiFaqRoute: typeof ApiFaqRoute
-  ApiPhotoRoute: typeof ApiPhotoRoute
-  ApiUploadRoute: typeof ApiUploadRoute
+  ApiSplatRoute: typeof ApiSplatRoute
   CvIdRoute: typeof CvIdRoute
   PrintIdRoute: typeof PrintIdRoute
   SShareIdRoute: typeof SShareIdRoute
-  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  ApiAvatarUserIdRoute: typeof ApiAvatarUserIdRoute
-  ApiChatStreamIdRoute: typeof ApiChatStreamIdRoute
-  ApiExportIdRoute: typeof ApiExportIdRoute
-  ApiFilesIdRoute: typeof ApiFilesIdRoute
-  ApiPhotosHashRoute: typeof ApiPhotosHashRoute
-  ApiAdminFilesIdRoute: typeof ApiAdminFilesIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -505,32 +375,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsageRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/api/chat': {
-      id: '/api/chat'
-      path: '/api/chat'
-      fullPath: '/api/chat'
-      preLoaderRoute: typeof ApiChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/faq': {
-      id: '/api/faq'
-      path: '/api/faq'
-      fullPath: '/api/faq'
-      preLoaderRoute: typeof ApiFaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/photo': {
-      id: '/api/photo'
-      path: '/api/photo'
-      fullPath: '/api/photo'
-      preLoaderRoute: typeof ApiPhotoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/upload': {
-      id: '/api/upload'
-      path: '/api/upload'
-      fullPath: '/api/upload'
-      preLoaderRoute: typeof ApiUploadRouteImport
+    '/api/$': {
+      id: '/api/$'
+      path: '/api/$'
+      fullPath: '/api/$'
+      preLoaderRoute: typeof ApiSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cv/$id': {
@@ -575,55 +424,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersIdRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/avatar/$userId': {
-      id: '/api/avatar/$userId'
-      path: '/api/avatar/$userId'
-      fullPath: '/api/avatar/$userId'
-      preLoaderRoute: typeof ApiAvatarUserIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat-stream/$id': {
-      id: '/api/chat-stream/$id'
-      path: '/api/chat-stream/$id'
-      fullPath: '/api/chat-stream/$id'
-      preLoaderRoute: typeof ApiChatStreamIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/export/$id': {
-      id: '/api/export/$id'
-      path: '/api/export/$id'
-      fullPath: '/api/export/$id'
-      preLoaderRoute: typeof ApiExportIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/files/$id': {
-      id: '/api/files/$id'
-      path: '/api/files/$id'
-      fullPath: '/api/files/$id'
-      preLoaderRoute: typeof ApiFilesIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/photos/$hash': {
-      id: '/api/photos/$hash'
-      path: '/api/photos/$hash'
-      fullPath: '/api/photos/$hash'
-      preLoaderRoute: typeof ApiPhotosHashRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/admin/files/$id': {
-      id: '/api/admin/files/$id'
-      path: '/api/admin/files/$id'
-      fullPath: '/api/admin/files/$id'
-      preLoaderRoute: typeof ApiAdminFilesIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -658,20 +458,10 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SignupRoute: SignupRoute,
   TermsRoute: TermsRoute,
-  ApiChatRoute: ApiChatRoute,
-  ApiFaqRoute: ApiFaqRoute,
-  ApiPhotoRoute: ApiPhotoRoute,
-  ApiUploadRoute: ApiUploadRoute,
+  ApiSplatRoute: ApiSplatRoute,
   CvIdRoute: CvIdRoute,
   PrintIdRoute: PrintIdRoute,
   SShareIdRoute: SShareIdRoute,
-  ApiAuthSplatRoute: ApiAuthSplatRoute,
-  ApiAvatarUserIdRoute: ApiAvatarUserIdRoute,
-  ApiChatStreamIdRoute: ApiChatStreamIdRoute,
-  ApiExportIdRoute: ApiExportIdRoute,
-  ApiFilesIdRoute: ApiFilesIdRoute,
-  ApiPhotosHashRoute: ApiPhotosHashRoute,
-  ApiAdminFilesIdRoute: ApiAdminFilesIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -150,6 +150,6 @@ const Users = () => {
 export const Route = createFileRoute("/admin/users/")({
   validateSearch: search,
   loaderDeps: ({ search: s }) => s,
-  loader: ({ deps }) => listAdminUsers({ data: deps }),
+  loader: ({ deps }) => listAdminUsers(deps),
   component: Users,
 });

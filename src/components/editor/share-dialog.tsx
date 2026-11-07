@@ -89,7 +89,7 @@ const usePreview = (cvId: string, open: boolean) => {
     let live = true;
     const load = async () => {
       try {
-        const row = await getCv({ data: { id: cvId } });
+        const row = await getCv({ id: cvId });
         if (live && row) {
           setPreview({
             cv: row.data,
@@ -496,7 +496,7 @@ export const ShareDialog = ({
     (patch: { enabled?: boolean; chat?: boolean }) =>
       whileBusy(setBusy, async () => {
         try {
-          const next = await setSharing({ data: { id: cvId, ...patch } });
+          const next = await setSharing({ id: cvId, ...patch });
           if (patch.enabled === true) {
             track("share_link_created", { chat: next.shareChat });
           } else if (patch.enabled === false) {

@@ -100,7 +100,7 @@ const EmailPanel = ({ user }: { user: Data["user"] }) => {
   const send = useCallback(async () => {
     setBusy(true);
     await withAdminToast(async () => {
-      await sendAdminVerification({ data: { id: user.id } });
+      await sendAdminVerification({ id: user.id });
       toast.success(m.admin_verify_sent());
     });
     setBusy(false);
@@ -112,7 +112,8 @@ const EmailPanel = ({ user }: { user: Data["user"] }) => {
       setBusy(true);
       await withAdminToast(async () => {
         await setAdminEmailVerified({
-          data: { id: user.id, verified: !user.emailVerified },
+          id: user.id,
+          verified: !user.emailVerified,
         });
         toast.success(
           user.emailVerified
@@ -248,11 +249,9 @@ const UserActions = ({ user }: { user: Data["user"] }) => {
       setBusy(true);
       await withAdminToast(async () => {
         await banAdminUser({
-          data: {
-            id: user.id,
-            reason: reason || undefined,
-            days: Number(days) || undefined,
-          },
+          id: user.id,
+          reason: reason || undefined,
+          days: Number(days) || undefined,
         });
         toast.success(m.admin_ban_done());
         setBanOpen(false);
@@ -266,7 +265,7 @@ const UserActions = ({ user }: { user: Data["user"] }) => {
   const unban = useCallback(async () => {
     setBusy(true);
     await withAdminToast(async () => {
-      await unbanAdminUser({ data: { id: user.id } });
+      await unbanAdminUser({ id: user.id });
       toast.success(m.admin_unban_done());
       await router.invalidate();
     });
@@ -278,7 +277,7 @@ const UserActions = ({ user }: { user: Data["user"] }) => {
       e.preventDefault();
       setBusy(true);
       try {
-        await deleteAdminUser({ data: { id: user.id } });
+        await deleteAdminUser({ id: user.id });
         toast.success(m.admin_delete_done());
         await navigate({ to: "/admin/users" });
       } catch (error) {
@@ -524,7 +523,7 @@ const UserDetail = () => {
 
 export const Route = createFileRoute("/admin/users/$id")({
   loader: async ({ params }) => {
-    const data = await getAdminUser({ data: { id: params.id } });
+    const data = await getAdminUser({ id: params.id });
     if (!data) {
       throw notFound();
     }
