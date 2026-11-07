@@ -50,6 +50,7 @@ import { m } from "#/paraglide/messages.js";
 import { getLocale, isLocale } from "#/paraglide/runtime.js";
 import type { Locale } from "#/paraglide/runtime.js";
 import { router } from "#/server/api/lib";
+import { logError } from "#/server/log";
 
 const totalUsage = (usages: Parameters<typeof usageNumbers>[0][]) => {
   let total = NO_USAGE;
@@ -312,7 +313,7 @@ export const chat = router()
           );
         },
         onError: (error) => {
-          console.error("[chat]", error);
+          logError("chat", error, { cvId: body.cvId });
           return m.ai_error_model({}, t);
         },
         onEnd: async ({ messages }) => {
@@ -334,7 +335,7 @@ export const chat = router()
           try {
             await recordStream(body.cvId, copy);
           } catch (error) {
-            console.error("[chat] record", error);
+            logError("chat_record", error, { cvId: body.cvId });
           }
         },
       });

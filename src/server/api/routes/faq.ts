@@ -16,6 +16,7 @@ import { m } from "#/paraglide/messages.js";
 import { getLocale, isLocale } from "#/paraglide/runtime.js";
 import type { Locale } from "#/paraglide/runtime.js";
 import { ErrorSchema, json, router } from "#/server/api/lib";
+import { logError } from "#/server/log";
 
 const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -145,7 +146,7 @@ export const faq = router().openapi(
       });
       return c.json({ answer: text.trim() }, 200);
     } catch (error) {
-      console.error("[faq]", error);
+      logError("faq", error);
       recordAiUsage({
         kind: "faq",
         model: modelId,

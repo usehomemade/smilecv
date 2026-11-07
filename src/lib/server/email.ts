@@ -5,6 +5,7 @@ import { ActionEmail } from "#/emails/layout";
 import { m } from "#/paraglide/messages.js";
 import { getLocale } from "#/paraglide/runtime.js";
 import type { Locale } from "#/paraglide/runtime.js";
+import { log, logError } from "#/server/log";
 
 const TRAILING_SLASH = /\/$/u;
 const FROM = process.env.EMAIL_FROM ?? "SmileCV <noreply@emails.smilecv.com>";
@@ -69,7 +70,10 @@ export const sendAccountEmail = async (
   );
   const subject = copy.subject({}, t);
   if (!usesend) {
-    console.info(`[email] ${kind} → ${opts.to}: ${opts.url}`);
+    log.info({
+      action: "email_skipped",
+      email: { kind, to: opts.to, url: opts.url },
+    });
     return;
   }
   const { error } = await usesend.emails.send({
@@ -79,7 +83,7 @@ export const sendAccountEmail = async (
     html,
   });
   if (error) {
-    console.error("[email]", kind, error);
+    logError("email", error, { email: { kind } });
     throw new Error(error.message);
   }
 };

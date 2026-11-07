@@ -11,6 +11,7 @@ import {
 
 import { Analytics } from "#/components/analytics";
 import { CookieBanner } from "#/components/cookie-banner";
+import { ErrorReporter } from "#/components/error-reporter";
 import { SignupGate } from "#/components/signup-gate";
 import { ErrorPage, NotFoundPage } from "#/components/status-page";
 import { Toaster } from "#/components/ui/sonner";
@@ -54,6 +55,7 @@ const RootDocument = ({ children }: { children: React.ReactNode }) => {
         <Toaster position="bottom-center" />
         <SignupGate />
         <CookieBanner />
+        <ErrorReporter />
         <Analytics config={analytics ?? null} />
         <Scripts />
       </body>

@@ -5,6 +5,7 @@ import { db } from "#/db";
 import { aiUsage } from "#/db/schema";
 import { costUsd, priceFor, WEB_SEARCH_PER_CALL } from "#/lib/ai/pricing";
 import type { UsageDetail } from "#/lib/ai/usage-detail";
+import { logError } from "#/server/log";
 
 export type AiKind = "chat" | "translate" | "faq";
 
@@ -119,7 +120,7 @@ export const recordAiUsage = (entry: AiUsageEntry) => {
         detail,
       });
     } catch (error) {
-      console.error("[ai-usage]", error);
+      logError("ai_usage", error);
     }
   };
   save();

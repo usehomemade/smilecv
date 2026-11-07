@@ -1,4 +1,5 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { evlog } from "evlog/hono";
 import type { ErrorHandler } from "hono";
 import { HTTPException } from "hono/http-exception";
 
@@ -6,13 +7,19 @@ import { auth } from "#/lib/auth";
 import { admin } from "#/server/api/admin/routes";
 import { accountRoutes } from "#/server/api/routes/account";
 import { chat } from "#/server/api/routes/chat";
+import { clientErrors } from "#/server/api/routes/client-errors";
 import { cvs } from "#/server/api/routes/cvs";
 import { exportCv } from "#/server/api/routes/export";
 import { faq } from "#/server/api/routes/faq";
 import { files } from "#/server/api/routes/files";
 import { meta } from "#/server/api/routes/meta";
+// Sets up the logger (and its OpenObserve drain) before any request.
+import "#/server/log";
 
 const base = new OpenAPIHono().basePath("/api");
+
+// One wide event per request (method, path, status, duration, errors).
+base.use(evlog());
 
 // Better Auth owns /api/auth/* (sign-in, OAuth callbacks, sessions).
 base.on(["GET", "POST"], "/auth/*", (c) => auth.handler(c.req.raw));
@@ -26,7 +33,8 @@ export const app = base
   .route("/", files)
   .route("/", chat)
   .route("/", exportCv)
-  .route("/", faq);
+  .route("/", faq)
+  .route("/", clientErrors);
 
 app.doc31("/openapi.json", {
   openapi: "3.1.0",

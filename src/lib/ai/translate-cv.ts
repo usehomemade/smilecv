@@ -2,6 +2,7 @@ import { generateText } from "ai";
 import type { LanguageModel, LanguageModelUsage } from "ai";
 
 import type { CV } from "#/lib/cv/schema";
+import { logError } from "#/server/log";
 
 /** Fields that are data, not words: never sent for translation. */
 const KEEP = new Set([
@@ -116,7 +117,7 @@ Rules:
           mergeStrings(value, JSON.parse(text.replaceAll(FENCE, ""))),
         ];
       } catch (error) {
-        console.error("[translate_cv]", key, error);
+        logError("translate_cv", error, { section: key });
         failed += 1;
         failedSections.push(key);
         lastError = error instanceof Error ? error.message : String(error);
