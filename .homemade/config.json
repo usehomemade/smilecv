@@ -1,0 +1,20 @@
+{
+  "$schema": "https://www.hmmd.dev/schemas/latest/config.json",
+  "install": [
+    "pnpm config set //npm.hugeicons.com/:_authToken \"$HUGEICONS_TOKEN\" --location=global",
+    "pnpm install --frozen-lockfile"
+  ],
+  "services": {
+    "db": {
+      "cmd": "docker start -a smilepg || docker run --name smilepg -e POSTGRES_USER=smilecv -e POSTGRES_PASSWORD=smilecv -e POSTGRES_DB=smilecv -p 54329:5432 postgres:17"
+    },
+    "web": {
+      "cmd": "sleep 5 && DATABASE_URL=postgresql://smilecv:smilecv@localhost:54329/smilecv BETTER_AUTH_URL=http://localhost:3033 BETTER_AUTH_SECRET=devsecretdevsecretdevsecret123456 sh -c 'pnpm db:migrate && pnpm dev'",
+      "port": 3033,
+      "url": true
+    }
+  },
+  "env_schema": [
+    "HUGEICONS_TOKEN"
+  ]
+}
