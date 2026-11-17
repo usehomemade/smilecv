@@ -1,20 +1,59 @@
 {
-  "$schema": "https://www.hmmd.dev/schemas/latest/config.json",
+  "$schema": "https://homemade.dev/schemas/latest/config.json",
   "install": [
-    "pnpm config set //npm.hugeicons.com/:_authToken \"$HUGEICONS_TOKEN\" --location=global",
-    "pnpm install --frozen-lockfile"
+    "[ -z \"$HUGEICONS_TOKEN\" ] || pnpm config set //npm.hugeicons.com/:_authToken \"$HUGEICONS_TOKEN\" --location=global",
+    "pnpm install --frozen-lockfile",
+    "pnpm exec paraglide-js compile --project ./project.inlang --outdir ./src/paraglide",
+    "pnpm generate-routes"
   ],
   "services": {
     "db": {
-      "cmd": "docker start -a smilepg || docker run --name smilepg -e POSTGRES_USER=smilecv -e POSTGRES_PASSWORD=smilecv -e POSTGRES_DB=smilecv -p 54329:5432 postgres:17"
+      "cmd": "docker start -a smilepg || docker run --name smilepg -e POSTGRES_USER=smilecv -e POSTGRES_PASSWORD=smilecv -e POSTGRES_DB=smilecv -p 54329:5432 postgres:17",
+      "port": 54329,
+      "displayName": "Postgres"
     },
     "web": {
-      "cmd": "sleep 5 && DATABASE_URL=postgresql://smilecv:smilecv@localhost:54329/smilecv BETTER_AUTH_URL=http://localhost:3033 BETTER_AUTH_SECRET=devsecretdevsecretdevsecret123456 sh -c 'pnpm db:migrate && pnpm dev'",
+      "cmd": "timeout 120 sh -c 'until docker exec smilepg pg_isready -h 127.0.0.1 -p 5432 -U smilecv -d smilecv -q; do sleep 1; done' && pnpm db:migrate && exec pnpm dev --host 0.0.0.0 --port \"$PORT\" --strictPort",
       "port": 3033,
-      "url": true
+      "url": true,
+      "healthcheck": {
+        "path": "/"
+      },
+      "displayName": "Web"
     }
   },
   "env_schema": [
-    "HUGEICONS_TOKEN"
+    {
+      "key": "HUGEICONS_TOKEN",
+      "warmup": true
+    },
+    "DATABASE_URL",
+    "BETTER_AUTH_URL",
+    "BETTER_AUTH_SECRET",
+    "__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS",
+    "OPENAI_API_KEY",
+    "OPENAI_MODEL",
+    "R2_ACCOUNT_ID",
+    "R2_BUCKET",
+    "R2_ACCESS_KEY_ID",
+    "R2_SECRET_ACCESS_KEY",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "USESEND_API_KEY",
+    "USESEND_URL",
+    "EMAIL_FROM",
+    "ADMIN_EMAILS",
+    "UMAMI_WEBSITE_ID",
+    "UMAMI_SCRIPT_URL",
+    "INTERNAL_URL",
+    "OTEL_EXPORTER_OTLP_ENDPOINT",
+    "OTEL_EXPORTER_OTLP_HEADERS",
+    "SOURCE_COMMIT"
+  ],
+  "warmup": [
+    "[ -z \"$HUGEICONS_TOKEN\" ] || pnpm config set //npm.hugeicons.com/:_authToken \"$HUGEICONS_TOKEN\" --location=global",
+    "pnpm install --frozen-lockfile",
+    "pnpm exec paraglide-js compile --project ./project.inlang --outdir ./src/paraglide",
+    "pnpm generate-routes"
   ]
 }
