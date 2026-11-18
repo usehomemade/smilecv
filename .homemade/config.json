@@ -2,16 +2,30 @@
   "$schema": "https://www.hmmd.dev/schemas/latest/config.json",
   "install": [
     "pnpm config set //npm.hugeicons.com/:_authToken \"$HUGEICONS_TOKEN\" --location=global",
-    "pnpm install --frozen-lockfile"
+    "pnpm install --frozen-lockfile",
+    "pnpm exec paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --strategy cookie custom-html preferredLanguage baseLocale --silent"
   ],
   "services": {
     "db": {
-      "cmd": "docker start -a smilepg || docker run --name smilepg -e POSTGRES_USER=smilecv -e POSTGRES_PASSWORD=smilecv -e POSTGRES_DB=smilecv -p 54329:5432 postgres:17"
+      "cmd": "docker start -a smilepg || docker run --name smilepg -e POSTGRES_USER=smilecv -e POSTGRES_PASSWORD=smilecv -e POSTGRES_DB=smilecv -p 54329:5432 postgres:17",
+      "port": 54329,
+      "healthcheck": {
+        "cmd": "docker exec smilepg pg_isready -U smilecv -h 127.0.0.1 -q"
+      },
+      "displayName": "Postgres"
     },
     "web": {
-      "cmd": "sleep 5 && DATABASE_URL=postgresql://smilecv:smilecv@localhost:54329/smilecv BETTER_AUTH_URL=http://localhost:3033 BETTER_AUTH_SECRET=devsecretdevsecretdevsecret123456 sh -c 'pnpm db:migrate && pnpm dev'",
+      "cmd": "DATABASE_URL=postgresql://smilecv:smilecv@localhost:54329/smilecv BETTER_AUTH_URL=http://localhost:3033 BETTER_AUTH_SECRET=devsecretdevsecretdevsecret123456 sh -c 'pnpm db:migrate && pnpm dev'",
       "port": 3033,
-      "url": true
+      "url": true,
+      "depends_on": {
+        "db": {
+          "condition": "healthy"
+        }
+      },
+      "healthcheck": {
+        "path": "/api/health"
+      }
     }
   },
   "env_schema": [
