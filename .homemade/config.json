@@ -64,5 +64,6 @@
     "pnpm install --frozen-lockfile",
     "pnpm exec paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --strategy cookie custom-html preferredLanguage baseLocale --silent",
     "docker pull postgres:17"
-  ]
+  ],
+  "size": "tiny"
 }
