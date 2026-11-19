@@ -1,9 +1,9 @@
 {
-  "$schema": "https://www.hmmd.dev/schemas/latest/config.json",
+  "$schema": "https://homemade.dev/schemas/latest/config.json",
   "install": [
     "pnpm config set //npm.hugeicons.com/:_authToken \"$HUGEICONS_TOKEN\" --location=global",
     "pnpm install --frozen-lockfile",
-    "pnpm exec paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --strategy cookie custom-html preferredLanguage baseLocale --silent"
+    "[ -f src/paraglide/messages.js ] || pnpm exec paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --strategy cookie custom-html preferredLanguage baseLocale --silent"
   ],
   "services": {
     "db": {
@@ -15,7 +15,7 @@
       "displayName": "Postgres"
     },
     "web": {
-      "cmd": "DATABASE_URL=postgresql://smilecv:smilecv@localhost:54329/smilecv BETTER_AUTH_URL=http://localhost:3033 BETTER_AUTH_SECRET=devsecretdevsecretdevsecret123456 sh -c 'pnpm db:migrate && pnpm dev'",
+      "cmd": "pnpm db:migrate && exec pnpm dev --host 0.0.0.0 --port \"$PORT\" --strictPort",
       "port": 3033,
       "url": true,
       "depends_on": {
@@ -29,6 +29,40 @@
     }
   },
   "env_schema": [
-    "HUGEICONS_TOKEN"
+    {
+      "key": "HUGEICONS_TOKEN",
+      "warmup": true
+    },
+    "DATABASE_URL",
+    "BETTER_AUTH_URL",
+    {
+      "key": "BETTER_AUTH_SECRET",
+      "generate": true
+    },
+    "BETTER_AUTH_TRUSTED_ORIGINS",
+    "OPENAI_API_KEY",
+    "OPENAI_MODEL",
+    "R2_ACCOUNT_ID",
+    "R2_BUCKET",
+    "R2_ACCESS_KEY_ID",
+    "R2_SECRET_ACCESS_KEY",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "USESEND_API_KEY",
+    "USESEND_URL",
+    "EMAIL_FROM",
+    "ADMIN_EMAILS",
+    "UMAMI_WEBSITE_ID",
+    "UMAMI_SCRIPT_URL",
+    "INTERNAL_URL",
+    "SOURCE_COMMIT",
+    "OTEL_EXPORTER_OTLP_ENDPOINT",
+    "OTEL_EXPORTER_OTLP_HEADERS"
+  ],
+  "warmup": [
+    "pnpm config set //npm.hugeicons.com/:_authToken \"$HUGEICONS_TOKEN\" --location=global",
+    "pnpm install --frozen-lockfile",
+    "pnpm exec paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --strategy cookie custom-html preferredLanguage baseLocale --silent",
+    "docker pull postgres:17"
   ]
 }
