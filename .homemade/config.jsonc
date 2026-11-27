@@ -36,6 +36,7 @@
     { "key": "DATABASE_URL", "default": "postgresql://smilecv:smilecv@127.0.0.1:54329/smilecv" },
     { "key": "BETTER_AUTH_URL", "default": "${HOMEMADE_URL_3033}" },
     { "key": "BETTER_AUTH_SECRET", "generate": true },
+    { "key": "BETTER_AUTH_TRUSTED_ORIGINS", "default": "http://localhost:3033" },
     { "key": "OPENAI_MODEL", "default": "gpt-5.4-mini" },
     "OPENAI_API_KEY",
     "GOOGLE_CLIENT_ID",
