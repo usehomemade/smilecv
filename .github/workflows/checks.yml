@@ -1,0 +1,38 @@
+name: Checks
+
+# Typecheck and lint (Ultracite: Oxlint + Oxfmt) on every pull request and on main.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: pnpm
+      # Hugeicons Pro is a private registry; same command as .homemade/config.jsonc.
+      - name: Configure Hugeicons Pro registry
+        env:
+          HUGEICONS_TOKEN: ${{ secrets.HUGEICONS_TOKEN }}
+        run: '[ -z "$HUGEICONS_TOKEN" ] || pnpm config set //npm.hugeicons.com/:_authToken "$HUGEICONS_TOKEN" --location=global'
+      - run: pnpm install --frozen-lockfile
+      # Git-ignored generated i18n code the typecheck needs.
+      - run: pnpm exec paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --strategy cookie custom-html preferredLanguage baseLocale --silent
+      - run: pnpm exec tsc --noEmit
+      - run: pnpm exec ultracite check
